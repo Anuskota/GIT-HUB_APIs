@@ -25,7 +25,9 @@ async function getUser(username) {
 
 async function getRepos(username) {
     
-    try { const {data} = await axios(APIURL + username + "")
+    try {
+        
+        const { data } = await axios(APIURL + username + "")
         addRepoToCard(data);
         
     } catch (err) {
@@ -34,9 +36,9 @@ async function getRepos(username) {
     }
 }
 
-async function createUserCard(user) {
+function createUserCard(user) {
 
-    const cardHtmlCreate =
+    const cardHtml =
         ` <div class="card">
                 <div>
                     <img src="${user.avatar_url}" alt="${user.name}" class="avatar">
@@ -47,16 +49,54 @@ async function createUserCard(user) {
                         <li>${user.followers} <strong>Followers</strong><li>
                         <li>${user.following} <strong>Following</strong><li>
                         <li>${user.public_repos} <strong>Public Repos</strong><li>
+                    <ul>
 
+                <div id="repos"></div>
+                </div>
+            </div>`;
 
-
-
-
-    
-    
-    
-    
-        `
+    main.innerHTML = cardHtml;
 
 
 }
+
+function createErrorCard(msg) {
+    const cardHTML = ` 
+        <div class="card">
+            <h1>${msg}</h1>
+        </div>
+    `
+    main.innerHTML = cardHTML; 
+
+}
+
+function addReposToCard(repos) {
+    const reposEl = document.getElementById('repos');
+    repos.slice(0, 5).forEach(repo => {
+        const repoLink = document.createElement('a');
+        repoLink.classList.add('repo');
+        repoLink.href = repo.html_url;
+        repoLink.target = '_blank'
+        repoLink.innerText = repo.name;
+
+        reposEl.appendChild(repoLink);
+
+
+    });
+}
+
+form.addEventListener(`submit`, (e) => {
+    e.preventDefault();
+
+    const user = search.valua;
+        if(user) {
+            getUser(user);
+            search.value = '';
+    }
+
+
+
+})
+
+
+
